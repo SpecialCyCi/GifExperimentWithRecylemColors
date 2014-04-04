@@ -18,17 +18,22 @@ local.properties
 # Eclipse project files
 .classpath
 .project
+.cproject
+/obj
+.settings/*
+target/*
 
-.settings/
-.DS_Store
-.idea/
-.gradle
-build/
-*.keystore
-out/
+#IntelliJ IDEA
+.idea
 *.iml
 *.ipr
 *.iws
-local.properties
+out
 
-.DS_Store
+#Gradle
+.gradle
+build
+gradle/
+gradlew*
+
+signing.properties

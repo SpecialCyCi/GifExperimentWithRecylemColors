@@ -1,0 +1,66 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.9.+'
+        classpath 'com.github.dcendents:android-maven-plugin:1.0'
+    }
+}
+
+apply plugin: 'android-library'
+apply plugin: 'android-maven'
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion '19.0.3'
+
+    sourceSets.main {
+        java.srcDirs = ['src']
+        resources.srcDirs = ['src']
+        aidl.srcDirs = ['src']
+        renderscript.srcDirs = ['src']
+        res.srcDirs = ['res']
+        assets.srcDirs = ['assets']
+        jniLibs.srcDirs = ['libs']
+
+        manifest.srcFile 'AndroidManifest.xml'
+    }
+    defaultConfig {
+        minSdkVersion 4
+        targetSdkVersion 19
+
+        ndk {
+            moduleName "gif"
+            //ldLibs "log"
+            cFlags "-DHAVE_CONFIG_H"
+        }
+    }
+
+}
+
+task ndkBuild(type: Exec) {
+    commandLine 'ndk-build', '-j'
+}
+tasks.withType(JavaCompile) {
+    compileTask -> compileTask.dependsOn ndkBuild
+}
+
+def isReleaseBuild() {
+    return version.contains("SNAPSHOT") == false
+}
+
+allprojects {
+    version = VERSION_NAME
+    group = GROUP
+    repositories {
+        mavenCentral()
+    }
+}
+
+apply from: 'https://raw.github.com/koral--/gradle-mvn-push/master/gradle-mvn-push.gradle'
